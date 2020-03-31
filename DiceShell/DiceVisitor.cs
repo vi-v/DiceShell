@@ -9,6 +9,33 @@
 
     public class DiceVisitor : DiceBaseVisitor<object>
     {
+        public override object VisitExpression([NotNull] DiceParser.ExpressionContext context)
+        {
+            int atomValue = (int)this.VisitSignedAtom(context.signedAtom());
+
+            if (context.expression() != null)
+            {
+                int value = (int)this.VisitExpression(context.expression());
+                return value + atomValue;
+            }
+            else
+            {
+                return atomValue;
+            }
+        }
+
+        public override object VisitSignedAtom([NotNull] DiceParser.SignedAtomContext context)
+        {
+            int mod = 1;
+
+            if (context.SIGN() != null && context.SIGN().GetText() == "-")
+            {
+                mod = -1;
+            }
+
+            return mod * (int)this.VisitAtom(context.atom());
+        }
+
         public override object VisitAtom([NotNull] DiceParser.AtomContext context)
         {
             if (context.diceGroup() == null)

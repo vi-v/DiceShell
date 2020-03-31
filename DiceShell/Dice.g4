@@ -5,8 +5,13 @@ grammar Dice;
  */
 
 expression
-	: expression  (PLUS | MINUS) expression
-	| (PLUS | MINUS) atom
+	: expression signedAtom
+	| signedAtom
+	;
+
+signedAtom
+	: SIGN atom
+	| atom
 	;
 
 atom
@@ -32,20 +37,12 @@ SIGN
 	;
 
 
-DIGIT
+fragment DIGIT
 	: ('0'..'9')
 	;
 
 D
 	: ('d' | 'D')
-	;
-
-PLUS
-	: '+'
-	;
-
-MINUS
-	: '-'
 	;
 
 WS

@@ -69,7 +69,68 @@ namespace DiceShellTest
 
             int result = (int)visitor.VisitAtom(context);
 
-            result.Should().BeGreaterThan(2);
+            result.Should().BeGreaterOrEqualTo(2);
+        }
+
+        [TestMethod]
+        public void NegativeAtomTest()
+        {
+            DiceParser parser = Setup("-4d8");
+            DiceParser.SignedAtomContext context = parser.signedAtom();
+            DiceVisitor visitor = new DiceVisitor();
+
+            int result = (int)visitor.VisitSignedAtom(context);
+
+            result.Should().BeLessOrEqualTo(-4);
+        }
+
+        [TestMethod]
+        public void SimpleExpressionTest()
+        {
+            DiceParser parser = Setup("3d6");
+            DiceParser.ExpressionContext context = parser.expression();
+            DiceVisitor visitor = new DiceVisitor();
+
+            int result = (int)visitor.VisitExpression(context);
+
+            result.Should().BeGreaterOrEqualTo(3);
+        }
+
+        [TestMethod]
+        public void SimpleExpressionArithmeticTest()
+        {
+            DiceParser parser = Setup("3d6 + 100");
+            DiceParser.ExpressionContext context = parser.expression();
+            DiceVisitor visitor = new DiceVisitor();
+
+            int result = (int)visitor.VisitExpression(context);
+
+            result.Should().BeGreaterOrEqualTo(103);
+        }
+
+        [TestMethod]
+        public void ComplexExpressionTest()
+        {
+            DiceParser parser = Setup("-100 + 0d100 + 2d6 + 100");
+            DiceParser.ExpressionContext context = parser.expression();
+            DiceVisitor visitor = new DiceVisitor();
+
+            int result = (int)visitor.VisitExpression(context);
+
+            result.Should().BeGreaterOrEqualTo(2);
+            result.Should().BeLessOrEqualTo(12);
+        }
+
+        [TestMethod]
+        public void SignlessExpressionTest()
+        {
+            DiceParser parser = Setup("1 2 3 4");
+            DiceParser.ExpressionContext context = parser.expression();
+            DiceVisitor visitor = new DiceVisitor();
+
+            int result = (int)visitor.VisitExpression(context);
+
+            result.Should().Be(10);
         }
 
         private static DiceParser Setup(string text)
