@@ -4,6 +4,10 @@ grammar Dice;
  * Parser Rules
  */
 
+shell
+	: expression
+	;
+
 expression
 	: expression signedAtom
 	| signedAtom

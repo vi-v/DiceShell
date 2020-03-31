@@ -136,10 +136,10 @@ namespace DiceShellTest
         private static DiceParser Setup(string text)
         {
             AntlrInputStream inputStream = new AntlrInputStream(text);
-            DiceLexer speakLexer = new DiceLexer(inputStream);
-            CommonTokenStream commonTokenStream = new CommonTokenStream(speakLexer);
-            DiceParser speakParser = new DiceParser(commonTokenStream);
-            return speakParser;
+            DiceLexer diceLexer = new DiceLexer(inputStream);
+            CommonTokenStream commonTokenStream = new CommonTokenStream(diceLexer);
+            DiceParser diceParser = new DiceParser(commonTokenStream);
+            return diceParser;
         }
     }
 }
