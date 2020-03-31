@@ -1,8 +1,20 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp2.2</TargetFramework>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Gen\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.8.0" />
+  </ItemGroup>
+
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent">
+    <Exec Command="java -jar &quot;$(SolutionDir)$(SolutionName)\antlr-4.8-complete.jar&quot; -package DiceShell.Gen -visitor -no-listener -Dlanguage=CSharp Dice.g4 -o &quot;$(SolutionDir)$(SolutionName)\Gen&quot;&#xD;&#xA;" />
+  </Target>
 
 </Project>

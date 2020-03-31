@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Collections.Immutable;
     using System.Linq;
     using System.Text;
 
@@ -14,6 +15,8 @@
         public int Count { get { return this.diceList.Count; } }
 
         public bool HasBeenRolled { get; private set; }
+
+        public IImmutableList<Dice> DiceList { get { return ImmutableList.Create(this.diceList.ToArray()); } }
 
         public DiceGroup()
         {
