@@ -48,6 +48,30 @@ namespace DiceShellTest
             dg.DiceList.First().Size.Should().Be(20);
         }
 
+        [TestMethod]
+        public void NumberAtomTest()
+        {
+            DiceParser parser = Setup("3");
+            DiceParser.AtomContext context = parser.atom();
+            DiceVisitor visitor = new DiceVisitor();
+
+            int result = (int)visitor.VisitAtom(context);
+
+            result.Should().Be(3);
+        }
+
+        [TestMethod]
+        public void DiceGroupAtomTest()
+        {
+            DiceParser parser = Setup("2d6");
+            DiceParser.AtomContext context = parser.atom();
+            DiceVisitor visitor = new DiceVisitor();
+
+            int result = (int)visitor.VisitAtom(context);
+
+            result.Should().BeGreaterThan(2);
+        }
+
         private static DiceParser Setup(string text)
         {
             AntlrInputStream inputStream = new AntlrInputStream(text);

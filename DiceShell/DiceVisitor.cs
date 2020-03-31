@@ -9,6 +9,21 @@
 
     public class DiceVisitor : DiceBaseVisitor<object>
     {
+        public override object VisitAtom([NotNull] DiceParser.AtomContext context)
+        {
+            if (context.diceGroup() == null)
+            {
+                return int.Parse(context.NUMBER().GetText());
+            }
+            else
+            {
+                DiceGroup diceGroup = (DiceGroup)this.VisitDiceGroup(context.diceGroup());
+                diceGroup.Roll();
+
+                return diceGroup.Value;
+            }
+        }
+
         public override object VisitDiceGroup([NotNull] DiceParser.DiceGroupContext context)
         {
             int count, size;
