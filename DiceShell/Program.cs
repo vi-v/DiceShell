@@ -2,27 +2,40 @@
 {
     using Antlr4.Runtime;
     using DiceShell.Gen;
+    using Mono.Terminal;
     using System;
 
     public class Program
     {
         public static void Main(string[] args)
         {
-            while (true)
+            LineEditor lineEditor = new LineEditor("DiceShell");
+
+            string input;
+            while ((input = lineEditor.Edit("DiceShell $ ", "")) != null)
             {
-                Console.Write("DiceShell $ ");
-                string input = Console.ReadLine();
+                if (string.IsNullOrEmpty(input))
+                {
+                    continue;
+                }
 
-                AntlrInputStream inputStream = new AntlrInputStream(input);
-                DiceLexer diceLexer = new DiceLexer(inputStream);
-                CommonTokenStream commonTokenStream = new CommonTokenStream(diceLexer);
-                DiceParser diceParser = new DiceParser(commonTokenStream);
-                DiceParser.ShellContext context = diceParser.shell();
-                DiceVisitor visitor = new DiceVisitor();
+                try
+                {
+                    AntlrInputStream inputStream = new AntlrInputStream(input);
+                    DiceLexer diceLexer = new DiceLexer(inputStream);
+                    CommonTokenStream commonTokenStream = new CommonTokenStream(diceLexer);
+                    DiceParser diceParser = new DiceParser(commonTokenStream);
+                    DiceParser.ShellContext context = diceParser.shell();
+                    DiceVisitor visitor = new DiceVisitor();
 
-                int result = (int)visitor.Visit(context);
+                    int result = (int)visitor.Visit(context);
 
-                Console.WriteLine(string.Format("[{0:HH:mm:ss}] {1}\n", DateTime.Now, result));
+                    Console.WriteLine(string.Format("[{0:HH:mm:ss}] {1}\n", DateTime.Now, result));
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Parsing Error\n");
+                }
             }
         }
     }
