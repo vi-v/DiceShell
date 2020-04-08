@@ -50,5 +50,13 @@ namespace DiceShellTest
 
             a.Should().Throw<DiceAlreadyRolledException>();
         }
+
+        [TestMethod]
+        public void ToStringTest()
+        {
+            Dice d = new Dice(12);
+
+            d.ToString().Should().Be("d12");
+        }
     }
 }

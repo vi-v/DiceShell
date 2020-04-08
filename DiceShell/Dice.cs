@@ -4,33 +4,23 @@
     using System.Collections.Generic;
     using System.Text;
 
-    public class Dice
+    public class Dice : Rollable
     {
         public int Size { get; }
-
-        public bool HasBeenRolled { get; private set; }
-
-        public int Value { get; private set; }
 
         public Dice(int size)
         {
             this.Size = size;
-            this.HasBeenRolled = false;
-            this.Value = 0;
         }
 
-
-        public void Roll(Random r = null)
+        public override string ToString()
         {
-            if (this.HasBeenRolled)
-            {
-                throw new DiceAlreadyRolledException(this.Value);
-            }
+            return $"d{this.Size}";
+        }
 
-            r = r ?? new Random();
-
-            this.Value = r.Next(1, this.Size + 1);
-            this.HasBeenRolled = true;
+        protected override int ExecuteRoll(Random r = null)
+        {
+            return r.Next(1, this.Size + 1);
         }
     }
 }
