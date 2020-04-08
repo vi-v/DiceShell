@@ -12,14 +12,6 @@ namespace DiceShellTest
     [TestClass]
     public class DiceVisitorTest
     {
-        [TestMethod]
-        public void TestFunc()
-        {
-            DiceParser parser = Setup("2d4 + 2");
-            DiceParser.DiceGroupContext context = parser.diceGroup();
-            DiceVisitor visitor = new DiceVisitor();
-            visitor.Visit(context);
-        }
 
         [TestMethod]
         public void MultipleDiceDiceGroupTest()
