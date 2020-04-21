@@ -26,28 +26,30 @@
 
         public override object VisitSignedAtom([NotNull] DiceParser.SignedAtomContext context)
         {
-            int mod = 1;
+            Atom atom = (Atom)this.VisitAtom(context.atom());
 
             if (context.SIGN() != null && context.SIGN().GetText() == "-")
             {
-                mod = -1;
+                atom.Sign = AtomSign.Minus;
             }
 
-            return mod * (int)this.VisitAtom(context.atom());
+            return atom;
         }
 
         public override object VisitAtom([NotNull] DiceParser.AtomContext context)
         {
+            Atom atom = new Atom();
             if (context.diceGroup() == null)
             {
-                return int.Parse(context.NUMBER().GetText());
+                atom.SetModifier(int.Parse(context.NUMBER().GetText()));
+                return atom;
             }
             else
             {
                 DiceGroup diceGroup = (DiceGroup)this.VisitDiceGroup(context.diceGroup());
-                diceGroup.Roll();
+                atom.SetDiceGroup(diceGroup);
 
-                return diceGroup.Value;
+                return atom;
             }
         }
 

@@ -20,7 +20,25 @@
 
         protected override int ExecuteRoll(Random r = null)
         {
-            return r.Next(1, this.Size + 1);
+            int result = r.Next(1, this.Size + 1);
+
+            if (this.Size == 20)
+            {
+                if (result == 1)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Natural 1");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+                else if (result == 20)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Natural 20");
+                    Console.ForegroundColor = ConsoleColor.White;
+                }
+            }
+
+            return result;
         }
     }
 }

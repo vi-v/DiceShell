@@ -47,9 +47,11 @@ namespace DiceShellTest
             DiceParser.AtomContext context = parser.atom();
             DiceVisitor visitor = new DiceVisitor();
 
-            int result = (int)visitor.VisitAtom(context);
+            Atom result = (Atom)visitor.VisitAtom(context);
 
-            result.Should().Be(3);
+            result.IsModifier.Should().BeTrue();
+            result.Sign.Should().Be(AtomSign.Plus);
+            result.ModifierInstance.Should().Be(3);
         }
 
         [TestMethod]
@@ -59,9 +61,11 @@ namespace DiceShellTest
             DiceParser.AtomContext context = parser.atom();
             DiceVisitor visitor = new DiceVisitor();
 
-            int result = (int)visitor.VisitAtom(context);
+            Atom result = (Atom)visitor.VisitAtom(context);
 
-            result.Should().BeGreaterOrEqualTo(2);
+            result.IsDiceGroup.Should().BeTrue();
+            result.Sign.Should().Be(AtomSign.Plus);
+            result.DiceGroupInstance.Should().BeEquivalentTo(new DiceGroup(new List<Dice> { new Dice(6), new Dice(6) }));
         }
 
         [TestMethod]
@@ -71,9 +75,11 @@ namespace DiceShellTest
             DiceParser.SignedAtomContext context = parser.signedAtom();
             DiceVisitor visitor = new DiceVisitor();
 
-            int result = (int)visitor.VisitSignedAtom(context);
+            Atom result = (Atom)visitor.VisitSignedAtom(context);
 
-            result.Should().BeLessOrEqualTo(-4);
+            result.IsDiceGroup.Should().BeTrue();
+            result.Sign.Should().Be(AtomSign.Minus);
+            result.DiceGroupInstance.Should().BeEquivalentTo(new DiceGroup(new List<Dice> { new Dice(8), new Dice(8), new Dice(8), new Dice(8) }));
         }
 
         [TestMethod]
