@@ -11,17 +11,21 @@
     {
         public override object VisitExpression([NotNull] DiceParser.ExpressionContext context)
         {
-            int atomValue = (int)this.VisitSignedAtom(context.signedAtom());
+            Atom atom = (Atom)this.VisitSignedAtom(context.signedAtom());
+            ExpressionResult er;
 
             if (context.expression() != null)
             {
-                int value = (int)this.VisitExpression(context.expression());
-                return value + atomValue;
+                er = (ExpressionResult)this.VisitExpression(context.expression());
             }
             else
             {
-                return atomValue;
+                er = new ExpressionResult();
             }
+
+            er.AddAtom(atom);
+
+            return er;
         }
 
         public override object VisitSignedAtom([NotNull] DiceParser.SignedAtomContext context)
