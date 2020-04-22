@@ -57,6 +57,49 @@ namespace DiceShellTest
             a.Sign.Should().Be(AtomSign.Minus);
         }
 
+        [TestMethod]
+        public void DiceGroupRollTest()
+        {
+            DiceGroup dg = FourDEightGroup();
+            Atom a = new Atom();
+            a.SetDiceGroup(dg);
+
+            a.Roll();
+
+            a.Value.Should().BeGreaterOrEqualTo(4);
+        }
+
+        [TestMethod]
+        public void ModifierRollTest()
+        {
+            Atom a = new Atom();
+            a.SetModifier(4);
+
+            a.Roll();
+
+            a.Value.Should().Be(4);
+        }
+
+        [TestMethod]
+        public void NegativeRollTest()
+        {
+            Atom a = new Atom();
+            a.SetModifier(-4);
+
+            a.Roll();
+
+            a.Value.Should().Be(-4);
+        }
+
+        [TestMethod]
+        public void RollBeforeInitializedTest()
+        {
+            Atom a = new Atom();
+            Action roll = () => a.Roll();
+
+            roll.Should().Throw<InvalidOperationException>();
+        }
+
         private static DiceGroup FourDEightGroup()
         {
             return new DiceGroup(new List<Dice>

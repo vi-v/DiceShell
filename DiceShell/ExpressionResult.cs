@@ -9,38 +9,31 @@
     {
         public ExpressionResult()
         {
-            this.DiceGroupList = new List<DiceGroup>();
-            this.ModifierList = new List<int>();
+            this.AtomList = new List<Atom>();
         }
 
-        public List<DiceGroup> DiceGroupList { get; private set; }
+        public List<Atom> AtomList { get; private set; }
 
-        public List<int> ModifierList { get; private set; }
-
-        public void AddDiceGroup(DiceGroup dg)
+        public void AddAtom(Atom a)
         {
-            this.DiceGroupList.Add(dg);
+            this.AtomList.Add(a);
         }
 
-        public void AddDiceGroups(IEnumerable<DiceGroup> diceGroups)
+        public void AddAtoms(IEnumerable<Atom> atoms)
         {
-            this.DiceGroupList.AddRange(diceGroups);
-        }
-
-        public void AddModifier(int m)
-        {
-            this.ModifierList.Add(m);
-        }
-
-        public void AddModifiers(IEnumerable<int> modifiers)
-        {
-            this.ModifierList.AddRange(modifiers);
+            this.AtomList.AddRange(atoms);
         }
 
         public void Print()
         {
-            this.DiceGroupList.ForEach(dg =>
+
+            IEnumerable<Atom> diceGroupAtoms = this.AtomList.Where(a => a.IsDiceGroup);
+            IEnumerable<Atom> modifierAtoms = this.AtomList.Where(a => a.IsModifier);
+
+            foreach (Atom a in diceGroupAtoms)
             {
+                DiceGroup dg = a.DiceGroupInstance;
+
                 dg.DiceList.ToList().ForEach(d =>
                 {
                     if (d.Size == 20)
@@ -58,19 +51,18 @@
                     Console.WriteLine($"{d}: {d.Value}");
                     Console.ForegroundColor = ConsoleColor.White;
                 });
-            });
+            }
 
             Console.Write("Modifiers: ");
-            Console.WriteLine(string.Join(", ", this.ModifierList.Select(m => m.ToString())));
+            Console.WriteLine(string.Join(", ", modifierAtoms.Select(a => a.ModifierInstance.ToString())));
         }
 
         protected override int ExecuteRoll(Random r = null)
         {
-            this.DiceGroupList.ForEach(dg => dg.Roll());
+            this.AtomList.ForEach(a => a.Roll());
 
-            return this.DiceGroupList
-                    .Select(dg => dg.Value)
-                    .Concat(this.ModifierList)
+            return this.AtomList
+                    .Select(a => a.Value)
                     .Sum();
         }
     }

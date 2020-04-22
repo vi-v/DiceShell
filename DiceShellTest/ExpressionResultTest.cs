@@ -15,68 +15,63 @@ namespace DiceShellTest
         {
             ExpressionResult er = new ExpressionResult();
 
-            er.DiceGroupList.Should().BeEmpty();
-            er.ModifierList.Should().BeEmpty();
+            er.AtomList.Should().BeEmpty();
         }
 
         [TestMethod]
-        public void AddDiceGroupTest()
+        public void AddAtomTest()
         {
-            List<DiceGroup> diceGroups = new List<DiceGroup> { FourDEightGroup(), TwoDTwentyGroup() };
+            Atom firstAtom = new Atom();
+            Atom secondAtom = new Atom();
+            firstAtom.SetDiceGroup(FourDEightGroup());
+            secondAtom.SetDiceGroup(TwoDTwentyGroup());
             ExpressionResult er = new ExpressionResult();
 
-            er.AddDiceGroup(diceGroups[0]);
-            er.AddDiceGroup(diceGroups[1]);
+            er.AddAtom(firstAtom);
+            er.AddAtom(secondAtom);
 
-            er.DiceGroupList.Should().BeEquivalentTo(diceGroups, opt => opt.WithStrictOrdering());
+            er.AtomList.Should().BeEquivalentTo(new List<Atom> { firstAtom, secondAtom }, opt => opt.WithStrictOrdering());
         }
 
         [TestMethod]
-        public void AddDiceGroupListTest()
+        public void AddAtomListTest()
         {
-            List<DiceGroup> diceGroups1 = new List<DiceGroup> { FourDEightGroup(), TwoDTwentyGroup() };
-            List<DiceGroup> diceGroups2 = new List<DiceGroup> { TwoDTwentyGroup(), FourDEightGroup() };
-            IEnumerable<DiceGroup> diceGroupsCombined = diceGroups1.Concat(diceGroups2);
+            Atom firstAtom = new Atom();
+            Atom secondAtom = new Atom();
+            Atom thirdAtom = new Atom();
+            Atom fourthAtom = new Atom();
+            firstAtom.SetDiceGroup(FourDEightGroup());
+            secondAtom.SetDiceGroup(TwoDTwentyGroup());
+            thirdAtom.SetDiceGroup(TwoDTwentyGroup());
+            fourthAtom.SetDiceGroup(FourDEightGroup());
+            List<Atom> firstAtomList = new List<Atom> { firstAtom, secondAtom };
+            List<Atom> secondAtomList = new List<Atom> { thirdAtom, fourthAtom };
+            IEnumerable<Atom> atomsCombined = firstAtomList.Concat(secondAtomList);
             ExpressionResult er = new ExpressionResult();
 
-            er.AddDiceGroups(diceGroups1);
-            er.AddDiceGroups(diceGroups2);
+            er.AddAtoms(firstAtomList);
+            er.AddAtoms(secondAtomList);
 
-            er.DiceGroupList.Should().BeEquivalentTo(diceGroupsCombined, opt => opt.WithStrictOrdering());
-        }
-
-        [TestMethod]
-        public void AddModifierTest()
-        {
-            ExpressionResult er = new ExpressionResult();
-
-            er.AddModifier(5);
-
-            er.ModifierList.Should().BeEquivalentTo(new List<int> { 5 });
-        }
-
-        [TestMethod]
-        public void AddModifierListTest()
-        {
-            List<int> modifierList1 = new List<int> { 2, 3 };
-            List<int> modifierList2 = new List<int> { 4, 5 };
-            ExpressionResult er = new ExpressionResult();
-
-            er.AddModifiers(modifierList1);
-            er.AddModifiers(modifierList2);
-
-            er.ModifierList.Should().BeEquivalentTo(new List<int> { 2, 3, 4, 5 });
+            er.AtomList.Should().BeEquivalentTo(atomsCombined, opt => opt.WithStrictOrdering());
         }
 
         [TestMethod]
         public void ExecuteResultTest()
         {
-            List<DiceGroup> diceGroups = new List<DiceGroup> { FourDEightGroup(), TwoDTwentyGroup() };
-            List<int> modifierList = new List<int> { 1000, 500 };
+            Atom firstAtom = new Atom();
+            Atom secondAtom = new Atom();
+            Atom thirdAtom = new Atom();
+            Atom fourthAtom = new Atom();
+            firstAtom.SetDiceGroup(FourDEightGroup());
+            secondAtom.SetDiceGroup(TwoDTwentyGroup());
+            thirdAtom.SetModifier(1000);
+            fourthAtom.SetModifier(500);
+            List<Atom> firstAtomList = new List<Atom> { firstAtom, secondAtom };
+            List<Atom> secondAtomList = new List<Atom> { thirdAtom, fourthAtom };
             ExpressionResult er = new ExpressionResult();
 
-            er.AddDiceGroups(diceGroups);
-            er.AddModifiers(modifierList);
+            er.AddAtoms(firstAtomList);
+            er.AddAtoms(secondAtomList);
             er.Roll();
 
             er.Value.Should().BeGreaterOrEqualTo(1500 + 4 + 2);

@@ -89,9 +89,10 @@ namespace DiceShellTest
             DiceParser.ExpressionContext context = parser.expression();
             DiceVisitor visitor = new DiceVisitor();
 
-            int result = (int)visitor.VisitExpression(context);
+            ExpressionResult result = (ExpressionResult)visitor.VisitExpression(context);
+            result.Roll();
 
-            result.Should().BeGreaterOrEqualTo(3);
+            result.Value.Should().BeGreaterOrEqualTo(3);
         }
 
         [TestMethod]
@@ -101,9 +102,10 @@ namespace DiceShellTest
             DiceParser.ExpressionContext context = parser.expression();
             DiceVisitor visitor = new DiceVisitor();
 
-            int result = (int)visitor.VisitExpression(context);
+            ExpressionResult result = (ExpressionResult)visitor.VisitExpression(context);
+            result.Roll();
 
-            result.Should().BeGreaterOrEqualTo(103);
+            result.Value.Should().BeGreaterOrEqualTo(103);
         }
 
         [TestMethod]
@@ -113,10 +115,12 @@ namespace DiceShellTest
             DiceParser.ExpressionContext context = parser.expression();
             DiceVisitor visitor = new DiceVisitor();
 
-            int result = (int)visitor.VisitExpression(context);
 
-            result.Should().BeGreaterOrEqualTo(2);
-            result.Should().BeLessOrEqualTo(12);
+            ExpressionResult result = (ExpressionResult)visitor.VisitExpression(context);
+            result.Roll();
+
+            result.Value.Should().BeGreaterOrEqualTo(2);
+            result.Value.Should().BeLessOrEqualTo(12);
         }
 
         [TestMethod]
@@ -126,9 +130,10 @@ namespace DiceShellTest
             DiceParser.ExpressionContext context = parser.expression();
             DiceVisitor visitor = new DiceVisitor();
 
-            int result = (int)visitor.VisitExpression(context);
+            ExpressionResult result = (ExpressionResult)visitor.VisitExpression(context);
+            result.Roll();
 
-            result.Should().Be(10);
+            result.Value.Should().Be(10);
         }
 
         private static DiceParser Setup(string text)

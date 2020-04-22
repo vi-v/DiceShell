@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Text;
 
-    public class Atom
+    public class Atom : Rollable
     {
         public Atom()
         {
@@ -38,6 +38,24 @@
             {
                 this.Sign = AtomSign.Minus;
             }
+        }
+
+        protected override int ExecuteRoll(Random r = null)
+        {
+            if (!this.IsModifier && !this.IsDiceGroup)
+            {
+                throw new InvalidOperationException("Atom not initialized");
+            }
+
+            int sign = this.Sign == AtomSign.Plus ? 1 : -1;
+
+            if (this.IsModifier)
+            {
+                return this.ModifierInstance * sign;
+            }
+
+            this.DiceGroupInstance.Roll();
+            return this.DiceGroupInstance.Value * sign;
         }
     }
 }
